@@ -1,0 +1,30 @@
+package com.tripleauth.hypriority.manager
+
+import com.tripleauth.hypriority.model.Job
+import com.tripleauth.hypriority.model.JobPriority
+import org.redisson.api.RPriorityQueue
+import org.redisson.api.RedissonClient
+import org.springframework.stereotype.Component
+
+@Component
+class HypriorityManager(private val redissonClient: RedissonClient) {
+
+    fun <T> addJob(
+        queueName: String,
+        jobId: String,
+        data: T,
+        priority: JobPriority
+    ) {
+        val job = Job(id = jobId, priority = priority, data = data)
+        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName)
+        queue.trySetComparator(compareBy { it.priority.level })
+        queue.add(job)
+
+        println("Added job with priority ${priority.name} to queue $queueName: $job")
+    }
+
+    fun <T> pollJob(queueName: String): Job<T>? {
+        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName)
+        return queue.poll()
+    }
+}
