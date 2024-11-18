@@ -6,6 +6,11 @@
 ### 1. 📦 Gradle 의존성 추가
 
 ```kotlin
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io") // <- 추가
+}
+
 dependencies {
     implementation("com.tripleauth:hypriority:{version}")
 
