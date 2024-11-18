@@ -48,7 +48,7 @@ kotlin {
     }
 }
 
-tasks.register<Jar>("jar") {
+tasks.named<Jar>("jar") {
     archiveBaseName.set("hypriority")
     archiveVersion.set(version.toString())
     archiveClassifier.set("")
