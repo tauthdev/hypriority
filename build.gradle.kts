@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.tripleauth"
-version = "0.9.3"
+version = "0.9.4"
 
 java {
     toolchain {
