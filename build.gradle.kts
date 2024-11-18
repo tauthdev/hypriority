@@ -4,11 +4,10 @@ plugins {
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("maven-publish")
-    id("java-library")
 }
 
 group = "com.tripleauth"
-version = "0.2.4"
+version = "0.2.5"
 
 java {
     toolchain {
@@ -54,6 +53,9 @@ tasks.getByName<Jar>("bootJar") {
     enabled = false
 }
 
-tasks.getByName<Jar>("jar") {
+tasks.named<Jar>("jar") {
     enabled = true
+    archiveClassifier.set("")
+    archiveBaseName.set("hypriority")
+    archiveVersion.set(version.toString())
 }
