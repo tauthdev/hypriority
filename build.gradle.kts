@@ -20,9 +20,11 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
+            artifact(tasks.getByName("jar"))
         }
     }
 }
+
 
 repositories {
     mavenCentral()
@@ -44,6 +46,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
+}
+
+tasks.register<Jar>("jar") {
+    archiveBaseName.set("hypriority")
+    archiveVersion.set(version.toString())
+    archiveClassifier.set("")
 }
 
 tasks.withType<Test> {
