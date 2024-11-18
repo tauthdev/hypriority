@@ -1,2 +1,2 @@
-env:
-  JAVA_VERSION: 17
+jdk:
+  - openjdk17
