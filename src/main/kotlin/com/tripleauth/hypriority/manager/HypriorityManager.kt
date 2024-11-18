@@ -2,12 +2,17 @@ package com.tripleauth.hypriority.manager
 
 import com.tripleauth.hypriority.model.Job
 import com.tripleauth.hypriority.model.JobPriority
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.redisson.api.RPriorityQueue
 import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Component
 
 @Component
-class HypriorityManager(private val redissonClient: RedissonClient) {
+class HypriorityManager(
+    private val redissonClient: RedissonClient
+) {
+
+    private val logger = KotlinLogging.logger {}
 
     fun <T> addJob(
         queueName: String,
@@ -20,7 +25,7 @@ class HypriorityManager(private val redissonClient: RedissonClient) {
         queue.trySetComparator(compareBy { it.priority.level })
         queue.add(job)
 
-        println("Added job with priority ${priority.name} to queue $queueName: $job")
+        logger.info { "Added job with priority ${priority.name} to queue $queueName: $job" }
     }
 
     fun <T> pollJob(queueName: String): Job<T>? {
