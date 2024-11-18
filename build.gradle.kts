@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.tripleauth"
-version = "0.2.2"
+version = "0.2.3"
 
 java {
     toolchain {
@@ -48,13 +48,6 @@ kotlin {
 
 tasks.named<Jar>("bootJar") {
     enabled = false
-}
-
-tasks.named<Jar>("jar") {
-    enabled = true
-    archiveBaseName.set("hypriority")
-    archiveVersion.set(version.toString())
-    archiveClassifier.set("")
 }
 
 tasks.withType<Test> {
