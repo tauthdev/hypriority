@@ -4,11 +4,10 @@ plugins {
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("maven-publish")
-    id("java-library")
 }
 
 group = "com.tripleauth"
-version = "0.0.1"
+version = "0.2.2"
 
 java {
     toolchain {
@@ -20,11 +19,10 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifact(tasks.getByName("jar"))
+            artifact(tasks.named("jar").get())
         }
     }
 }
-
 
 repositories {
     mavenCentral()
@@ -48,7 +46,12 @@ kotlin {
     }
 }
 
+tasks.named<Jar>("bootJar") {
+    enabled = false
+}
+
 tasks.named<Jar>("jar") {
+    enabled = true
     archiveBaseName.set("hypriority")
     archiveVersion.set(version.toString())
     archiveClassifier.set("")
@@ -56,12 +59,4 @@ tasks.named<Jar>("jar") {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.getByName<Jar>("bootJar") {
-    enabled = false
-}
-
-tasks.getByName<Jar>("jar") {
-    enabled = true
 }
