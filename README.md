@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.tripleauth:hypriority:{version}")
+    implementation("com.github.tauthdev:hypriority:{version}")
 
 
     // Apple Silicon (ARM64) 기반 MacOS 환경에서는 Netty의 DNS 네이티브 모듈을 사용하여 성능과 안정성 개선합
