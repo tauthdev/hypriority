@@ -35,14 +35,9 @@ class HypriorityConfig(
 
         val objectMapper = jacksonObjectMapper().apply {
             setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
-            activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL
-            )
             disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            deactivateDefaultTyping()
         }
-
-        objectMapper.deactivateDefaultTyping()
 
         val codec: Codec = JsonJacksonCodec(objectMapper)
 
