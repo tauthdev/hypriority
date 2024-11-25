@@ -42,6 +42,8 @@ class HypriorityConfig(
             disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
         }
 
+        objectMapper.deactivateDefaultTyping()
+
         val codec: Codec = JsonJacksonCodec(objectMapper)
 
         config.useSingleServer()
