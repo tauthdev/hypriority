@@ -21,25 +21,36 @@ class HypriorityListenerProcessor(
                 val queueName = annotation.queueName
                 val concurrency = annotation.concurrency
 
-                repeat(concurrency) {
+                repeat(concurrency.coerceAtMost(5)) {
                     thread(start = true) {
-                        while (true) {
-                            val job = manager.pollJob<Any>(queueName)
-                            if (job != null) {
-                                try {
-                                    method.invoke(bean, job)
-                                } catch (e: Exception) {
-                                    logger.error { "Error processing job: ${e.message}" }
-                                }
-                            } else {
-                                Thread.sleep(1000)
-                            }
-                        }
+                        processQueue(queueName, bean, method)
                     }
                 }
             }
         }
 
         return bean
+    }
+
+    private fun processQueue(queueName: String, bean: Any, method: java.lang.reflect.Method) {
+        while (true) {
+            try {
+                val job = manager.pollJob<Any>(queueName)
+                if (job != null) {
+                    try {
+                        method.invoke(bean, job)
+                        logger.info { "Processed job from queue: $queueName" }
+                    } catch (e: Exception) {
+                        logger.error(e) { "Error processing job from queue: $queueName" }
+                    }
+                } else {
+                    logger.debug { "No job available in queue: $queueName. Waiting..." }
+                    Thread.sleep(1000)
+                }
+            } catch (e: Exception) {
+                logger.error(e) { "Unexpected error while processing queue: $queueName" }
+                Thread.sleep(5000)
+            }
+        }
     }
 }
