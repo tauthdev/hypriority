@@ -1,6 +1,5 @@
 package com.tripleauth.hypriority.manager
 
-import com.tripleauth.hypriority.codec.CustomJsonCodec
 import com.tripleauth.hypriority.model.Job
 import com.tripleauth.hypriority.model.JobPriority
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class HypriorityManager(
-    private val redissonClient: RedissonClient,
+    private val redissonClient: RedissonClient
 ) {
 
     private val logger = KotlinLogging.logger {}
@@ -22,7 +21,7 @@ class HypriorityManager(
         priority: JobPriority
     ) {
         val job = Job(id = jobId, priority = priority, data = data)
-        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName, CustomJsonCodec())
+        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName)
         queue.trySetComparator(compareBy { it.priority.level })
         queue.add(job)
 
@@ -30,8 +29,7 @@ class HypriorityManager(
     }
 
     fun <T> pollJob(queueName: String): Job<T>? {
-        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName, CustomJsonCodec())
-
+        val queue: RPriorityQueue<Job<T>> = redissonClient.getPriorityQueue(queueName)
         return queue.poll()
     }
 }
